@@ -105,8 +105,8 @@ export function decodePlate(plate: string): PlateInfo | null {
   for (const [prefix, info] of PLATE_MAP) {
     if (!letters.startsWith(prefix)) continue;
     const suffix = letters.slice(prefix.length);
-    // Allow no extra letters (W1234) or exactly one extra letter (new series: BJA1234, WXX1234)
-    if (suffix.length > 1) continue;
+    // Allow 0, 1, or 2 extra series letters (W1234 / BJA1234 / JVK4970)
+    if (suffix.length > 2) continue;
     const afterLetters = clean[letters.length];
     if (afterLetters === undefined || /\d/.test(afterLetters)) {
       return info;
