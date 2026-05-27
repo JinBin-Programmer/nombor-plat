@@ -102,14 +102,14 @@ export function decodePlate(plate: string): PlateInfo | null {
   const letters = clean.match(/^([A-Z]+)/)?.[1];
   if (!letters) return null;
 
-  // Try from longest prefix to shortest
   for (const [prefix, info] of PLATE_MAP) {
-    if (letters === prefix || letters.startsWith(prefix)) {
-      // Make sure the next char after prefix (if any) is a digit
-      const nextChar = letters[prefix.length];
-      if (nextChar === undefined || /\d/.test(clean[prefix.length])) {
-        return info;
-      }
+    if (!letters.startsWith(prefix)) continue;
+    const suffix = letters.slice(prefix.length);
+    // Allow no extra letters (W1234) or exactly one extra letter (new series: BJA1234, WXX1234)
+    if (suffix.length > 1) continue;
+    const afterLetters = clean[letters.length];
+    if (afterLetters === undefined || /\d/.test(afterLetters)) {
+      return info;
     }
   }
   return null;
